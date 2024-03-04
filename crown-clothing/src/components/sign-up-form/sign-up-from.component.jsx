@@ -1,11 +1,13 @@
 
-import { useState } from "react"
+import { useState, useContext } from "react"
 
 import { create_auth_user_with_email_and_password, create_user_doc_from_auth } from "../../utils/firebase/firebase.utils";
 
 import FormInput from "../form-input/form-unput.component";
 
 import Button from "../button/button.component";
+
+// import { UserContext } from "../../contexts/user.context";
 
 import './sign-up-form.styles.scss'
 
@@ -17,12 +19,18 @@ const default_form_feilds = {
     confirm_password : '',
 }
 
+
 const SignUpForm = () => {
 
     const [form_feilds, set_form_feilds] = useState(default_form_feilds);
     const {display_name, email, password, confirm_password} = form_feilds;
 
+    // const { set_current_user } = useContext(UserContext);
+
+    // console.log(`hit`);
     // console.log(form_feilds);
+
+    // const val = useContext(UserContext);
 
     // resets the form after the user is generated and stored in firebase
     const reset_form_feilds = () => {
@@ -48,6 +56,7 @@ const SignUpForm = () => {
 
             await create_user_doc_from_auth(user, {display_name});
 
+            // set_current_user(user);
             reset_form_feilds();
         }catch(error){
             if(error.code == 'auth/email-already-in-use'){

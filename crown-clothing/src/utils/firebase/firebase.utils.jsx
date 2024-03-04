@@ -6,6 +6,8 @@ import {
     GoogleAuthProvider,
     createUserWithEmailAndPassword,
     signInWithEmailAndPassword,
+    signOut,
+    onAuthStateChanged,
 } from 'firebase/auth'
 
 import { 
@@ -97,4 +99,12 @@ export const create_auth_user_with_email_and_password = async (email, password) 
 export const sign_in_auth_user_with_email_and_password = async (email, password) => {
     if(!(email) || !(password)) return
     return await signInWithEmailAndPassword(auth, email, password);
+}
+
+export const sign_the_user_out = async () => {
+    return await signOut(auth);
+}
+
+export const on_auth_state_changed_listener = (callback) => {
+    return onAuthStateChanged(auth, callback); // it is an open listener,will always be running to see of the auth state has changed or not
 }

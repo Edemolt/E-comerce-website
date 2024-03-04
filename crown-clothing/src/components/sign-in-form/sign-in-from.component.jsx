@@ -1,5 +1,5 @@
 
-import { useState } from "react"
+import { useState, useContext } from "react"
 
 import { 
     create_auth_user_with_email_and_password, 
@@ -11,6 +11,8 @@ import {
 import FormInput from "../form-input/form-unput.component";
 
 import Button from "../button/button.component";
+
+// import { UserContext } from "../../contexts/user.context";
 
 import './sign-in-form.styles.scss'
 
@@ -25,6 +27,8 @@ const SignInForm = () => {
     const [form_feilds, set_form_feilds] = useState(default_form_feilds);
     const { email, password, confirm_password} = form_feilds;
 
+    // const { set_current_user } = useContext(UserContext);
+
     // console.log(form_feilds);
 
     // resets the form after the user is generated and stored in firebase
@@ -38,6 +42,9 @@ const SignInForm = () => {
         // console.log(resp);
         const user = users_credentials.user
         await create_user_doc_from_auth(user)
+        // console.log('settinhg current user');
+        // set_current_user(user);
+        // console.log('sett current user');
     }
 
 
@@ -52,7 +59,10 @@ const SignInForm = () => {
 
 
         try{
-            const response = await sign_in_auth_user_with_email_and_password(email, password)
+            const {user} = await sign_in_auth_user_with_email_and_password(email, password)
+            // console.log('running');
+            // set_current_user(user);
+            // console.log('ran');
             // console.log(response);
             reset_form_feilds();
         }catch(error){
@@ -80,7 +90,7 @@ const SignInForm = () => {
  
                 <div className="buttons-container">
                     <Button type="submit">SIGN IN</Button>
-                    <Button type='button' button_type = {'google'} onClick = {signInWithGooglePopup}>GOOGLE SIGN IN</Button>
+                    <Button type='button' button_type = {'google'} onClick = {sign_in_with_google}>GOOGLE SIGN IN</Button>
                 </div>
             </form>
         </div>
