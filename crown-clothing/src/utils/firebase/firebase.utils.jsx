@@ -17,6 +17,8 @@ import {
     setDoc, // to set the dsocumnet data
 } from 'firebase/firestore'
 
+import { UserContext } from '../../contexts/user.context';
+
 const firebaseConfig = {
     apiKey: "AIzaSyDhgYPI5JE3nd9NtoP7Fyu3TnYPFv_U8zQ",
     authDomain: "crwn-clothing-db-6edb3.firebaseapp.com",

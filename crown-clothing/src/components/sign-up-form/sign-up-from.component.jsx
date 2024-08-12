@@ -7,7 +7,7 @@ import FormInput from "../form-input/form-unput.component";
 
 import Button from "../button/button.component";
 
-// import { UserContext } from "../../contexts/user.context";
+import { UserContext } from "../../contexts/user.context";
 
 import './sign-up-form.styles.scss'
 
@@ -25,7 +25,7 @@ const SignUpForm = () => {
     const [form_feilds, set_form_feilds] = useState(default_form_feilds);
     const {display_name, email, password, confirm_password} = form_feilds;
 
-    // const { set_current_user } = useContext(UserContext);
+    const { set_current_user } = useContext(UserContext);
 
     // console.log(`hit`);
     // console.log(form_feilds);
@@ -56,7 +56,7 @@ const SignUpForm = () => {
 
             await create_user_doc_from_auth(user, {display_name});
 
-            // set_current_user(user);
+            set_current_user(user);
             reset_form_feilds();
         }catch(error){
             if(error.code == 'auth/email-already-in-use'){

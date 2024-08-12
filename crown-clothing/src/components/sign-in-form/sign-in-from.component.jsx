@@ -12,7 +12,7 @@ import FormInput from "../form-input/form-unput.component";
 
 import Button from "../button/button.component";
 
-// import { UserContext } from "../../contexts/user.context";
+import { UserContext } from "../../contexts/user.context";
 
 import './sign-in-form.styles.scss'
 
@@ -27,7 +27,7 @@ const SignInForm = () => {
     const [form_feilds, set_form_feilds] = useState(default_form_feilds);
     const { email, password, confirm_password} = form_feilds;
 
-    // const { set_current_user } = useContext(UserContext);
+    const { set_current_user } = useContext(UserContext);
 
     // console.log(form_feilds);
 
@@ -43,7 +43,7 @@ const SignInForm = () => {
         const user = users_credentials.user
         await create_user_doc_from_auth(user)
         // console.log('settinhg current user');
-        // set_current_user(user);
+        set_current_user(user);
         // console.log('sett current user');
     }
 
