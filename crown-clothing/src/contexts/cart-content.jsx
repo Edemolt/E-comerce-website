@@ -14,11 +14,22 @@ const add_cart_item = ( cart_items, product_to_add) => { // recieves the cart it
              {...cart_item, quantity : cart_item.quantity  + 1} : cart_item  
         )
     } 
-    console.log("adding new product");
+    // console.log("adding new product");
+    console.log(cart_items);
     // return new array with modified cart itenms or new cart items
     // [{...product_to_add, quantity : 1}]
     return [...cart_items, {...product_to_add, quantity : 1}];
 
+}
+
+const remove_cart_item = (cart_items, product_to_remove) => {
+    const existing_cart_item = cart_items.find( (cart_item) => cart_item.id === product_to_remove.id);
+    if(existing_cart_item.quantity === 1){
+        return cart_items.filter( (cart_item) => cart_item.id !== product_to_remove.id);
+    }
+    return cart_items.map( (cart_item) => cart_item.id === product_to_remove.id ?
+        {...cart_item, quantity : cart_item.quantity - 1} : cart_item
+    )
 }
 
 export const CartContext = createContext({
@@ -26,7 +37,10 @@ export const CartContext = createContext({
     set_cart_open : () => {},
     cart_items : [],
     add_item_to_cart : () => {},
-    cart_cnt : 0
+    remove_item_from_cart : () => {},
+    delete_item_from_cart : () => {},
+    cart_cnt : 0,
+    total : 0
 });
 
 export const CartProvider = ({children}) => {
@@ -37,6 +51,8 @@ export const CartProvider = ({children}) => {
 
     const [ cart_cnt, set_cart_cnt ] = useState(0);
 
+    const [ total, set_total ] = useState(0);
+
     useEffect( () => {
         const new_cart_cnt = cart_items.reduce( (total, cart_item) => {
             return total + cart_item.quantity;
@@ -44,20 +60,37 @@ export const CartProvider = ({children}) => {
         set_cart_cnt(new_cart_cnt);
     }, [cart_items]);
 
+    useEffect( () => {
+        const new_cart_total = cart_items.reduce( (total, cart_item) => {
+            return total + cart_item.quantity * cart_item.price;
+        }, 0);
+        set_total(new_cart_total);
+    }, [cart_items]);
+
     const add_item_to_cart = (product_to_add) => {
         // here we need to check if the item is present and simply item += 1
         // or add a new Element in the cart
 
         // set cart_items value to the newest up to date array
-        console.log("sending to add_cart_item");
+        // console.log("sending to add_cart_item");
 
         set_cart_items(add_cart_item(cart_items, product_to_add));
 
-        console.log("added");
-        console.log(cart_items);
+        // console.log("added");
+        // console.log(cart_items);
     }
 
-    const value = {is_cart_open, set_cart_open, add_item_to_cart, cart_items, cart_cnt};
+    const remove_item_from_cart = (product_to_remove) => {
+        // here we need to check if the item is present and simply item -= 1
+        // or remove the item from the cart
+        set_cart_items(remove_cart_item(cart_items, product_to_remove));
+    }
+
+    const delete_item_from_cart = (product_to_delete) => {
+        set_cart_items(cart_items.filter( (cart_item) => cart_item.id !== product_to_delete.id));
+    }
+
+    const value = {is_cart_open, set_cart_open, add_item_to_cart, remove_item_from_cart, cart_items, delete_item_from_cart, cart_cnt, total};
  
     return( <CartContext.Provider value={value}>{children}</CartContext.Provider> )
 }
