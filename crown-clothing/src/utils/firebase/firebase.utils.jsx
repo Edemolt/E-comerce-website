@@ -15,6 +15,11 @@ import {
     doc, // retrive the documnets stored inside the database
     getDoc, // to get the document dta
     setDoc, // to set the dsocumnet data
+    collection, // to get the collection
+    writeBatch, // to write the batch of data
+    query, // to query the data
+    getDocs, // to get the data
+    // where, // to filter the data
 } from 'firebase/firestore'
 
 import { UserContext } from '../../contexts/user.context';
@@ -51,6 +56,37 @@ export const signInWithGoogleRedirect = () => {
 
 
 export const db = getFirestore(); // entire firebase database accessed through db now
+
+export const add_collection_and_documents = async ( collection_key, objects_to_add) => {
+    const collection_referrence = collection(db, collection_key);
+
+    const batch = writeBatch(db);
+
+    objects_to_add.forEach( (obj) => {
+        const doc_ref = doc(collection_referrence, obj.title.toLowerCase());
+        batch.set(doc_ref, obj);
+    });
+    
+    await batch.commit();
+    console.log('batch commited');
+};
+
+export const get_categories_and_documents = async () => {
+    const collection_referrence = collection(db, 'categories');
+
+    const q = query(collection_referrence);
+    const query_snapshot = await getDocs(q); // it is the data, also a specific kind of object
+    // fetches the document snapshots we want
+
+    // now can access snapshots of all the documents in the collection
+    const category_mp = query_snapshot.docs.reduce( (accumulator, doc_snapshot) => {
+        const { title, items } = doc_snapshot.data();
+        accumulator[title.toLowerCase()] = items;
+        return accumulator;
+    }, {});
+
+    return category_mp;
+};
 
 export const create_user_doc_from_auth = async (user_auth_object, additional_information = {}) => {
     
