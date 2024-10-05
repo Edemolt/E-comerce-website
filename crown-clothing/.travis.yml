@@ -1,0 +1,26 @@
+language: node_js
+node_js:
+  - "16"
+
+services:
+  - docker
+
+before_install:
+  - pip install --user awscli
+  - export PATH=$PATH:$HOME/.local/bin
+
+script:
+  - npm test
+  - docker build -t kushagra-e-comerce .
+
+deploy:
+  provider: elasticbeanstalk
+  region: "your-aws-region"
+  app: "your-eb-app-name"
+  env: "your-eb-environment-name"
+  bucket_name: "your-s3-bucket-name"
+  bucket_path: "your-app-name"
+  on:
+    branch: main
+  access_key_id: $AWS_ACCESS_KEY
+  secret_access_key: $AWS_SECRET_KEY
