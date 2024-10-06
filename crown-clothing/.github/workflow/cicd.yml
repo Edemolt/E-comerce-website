@@ -19,7 +19,7 @@ jobs:
 
   deploy:
     needs: build
-    runs-on: ip-172-31-9-119
+    runs-on: aws-ec2
     steps: 
       - name: Pull img from DockerHub
         run: docker pull demolt/crown-clothing:latest
